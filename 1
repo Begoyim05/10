@@ -1,0 +1,105 @@
+#include <vector>
+#include <stdexcept>
+#include <iostream>
+
+class VectorCompleteTree {
+public:
+    VectorCompleteTree() : V(1) {} // V[0] is dummy
+
+    int size() const {
+        return V.size() - 1; // subtract dummy
+    }
+
+    bool empty() const {
+        return size() == 0;
+    }
+
+    int root() const {
+        if (empty()) throw std::runtime_error("empty tree");
+        return 1;
+    }
+
+    int last() const {
+        if (empty()) throw std::runtime_error("empty tree");
+        return size();
+    }
+
+    int parent(int i) const {
+        if (i <= 1 || i >= V.size()) throw std::out_of_range("invalid index");
+        return i / 2;
+    }
+
+    int left(int i) const {
+        if (i <= 0 || i >= V.size()) throw std::out_of_range("invalid index");
+        return 2 * i;
+    }
+
+    int right(int i) const {
+        if (i <= 0 || i >= V.size()) throw std::out_of_range("invalid index");
+        return 2 * i + 1;
+    }
+
+    bool hasLeft(int i) const {
+        return left(i) <= size();
+    }
+
+    bool hasRight(int i) const {
+        return right(i) <= size();
+    }
+
+    bool isRoot(int i) const {
+        return i == 1;
+    }
+
+ 
+    int& at(int i) {
+        if (i <= 0 || i >= V.size()) throw std::out_of_range("invalid index");
+        return V[i];
+    }
+
+    const int& at(int i) const {
+        if (i <= 0 || i >= V.size()) throw std::out_of_range("invalid index");
+        return V[i];
+    }
+
+  
+    void addLast(int e) {
+        V.push_back(e);
+    }
+
+    void removeLast() {
+        if (empty()) throw std::runtime_error("empty tree");
+        V.pop_back();
+    }
+
+    void swapPos(int i, int j) {
+        if (i <= 0 || j <= 0 || i >= V.size() || j >= V.size())
+            throw std::out_of_range("invalid index");
+        std::swap(V[i], V[j]);
+    }
+
+private:
+    std::vector<int> V; // vector storing tree nodes (1-based indexing)
+};
+int main() {
+    VectorCompleteTree tree;
+
+    tree.addLast(10);
+    tree.addLast(20);
+    tree.addLast(30);
+    tree.addLast(40);
+
+    std::cout << "Tree size: " << tree.size() << std::endl;
+    std::cout << "Root value: " << tree.at(tree.root()) << std::endl;
+    std::cout << "Last value: " << tree.at(tree.last()) << std::endl;
+    std::cout << "Parent of 4: " << tree.at(tree.parent(4)) << std::endl;
+
+    tree.swapPos(2, 3);
+    std::cout << "After swap, position 2: " << tree.at(2) << std::endl;
+
+    tree.removeLast();
+    std::cout << "After removal, size: " << tree.size() << std::endl;
+
+    return 0;
+}
+
