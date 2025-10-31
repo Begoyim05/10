@@ -1,0 +1,68 @@
+#include <iostream>
+#include <list>
+using namespace std;
+
+class ListPriorityQueue {
+public:
+    int size() const;
+    bool empty() const;
+    void insert(int e);
+    int min() const;
+    void removeMin();
+
+private:
+    list<int> L;
+    static bool isLess(int a, int b) { return a < b; }
+};
+
+// --- Return number of elements ---
+int ListPriorityQueue::size() const {
+    return L.size();
+}
+
+// --- Check if empty ---
+bool ListPriorityQueue::empty() const {
+    return L.empty();
+}
+
+// --- Insert element in ascending order ---
+void ListPriorityQueue::insert(int e) {
+    // Find correct position to insert while keeping sorted order
+    auto it = L.begin();
+    while (it != L.end() && !isLess(e, *it)) {
+        ++it;
+    }
+    L.insert(it, e);
+}
+
+// --- Return the smallest element (first in list) ---
+int ListPriorityQueue::min() const {
+    if (L.empty()) {
+        cout << "empty queue" << endl;
+        return -1; // Return dummy value (can be ignored since we print anyway)
+    }
+    return L.front();
+}
+
+void ListPriorityQueue::removeMin() {
+    if (L.empty()) {
+        cout << "empty queue" << endl;
+        return;
+    }
+    L.pop_front();
+}
+
+int main() {
+    ListPriorityQueue pq;
+    pq.insert(5);
+    pq.insert(2);
+    pq.insert(7);
+    pq.insert(3);
+
+    while (!pq.empty()) {
+        cout << pq.min() << " ";
+        pq.removeMin();
+    }
+    cout << "\n"; // Expected output: 2 3 5 7
+    return 0;
+}
